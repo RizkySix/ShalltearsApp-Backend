@@ -16,7 +16,7 @@ return new class extends Migration
             $table->id();
             $table->string('slug')->unique();
             $table->foreignIdFor(Post::class);
-            $table->string('caption' , 150)->nullable();
+            $table->text('caption')->nullable();
             $table->timestamps();
         });
     }

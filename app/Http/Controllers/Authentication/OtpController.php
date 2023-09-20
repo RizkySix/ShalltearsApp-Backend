@@ -28,10 +28,7 @@ class OtpController extends Controller
         if($actionResponse == true){
             return redirect()->away('http://localhost:5173/auth/verification/success');
         }else{
-            return response()->json([
-                'status' => false,
-                'message' => 'Email failed to verified'
-            ] , 400);
+            return redirect()->away('http://localhost:5173/auth/verification/success?fail=true');
         }
     }
 

@@ -26,7 +26,7 @@ class UserProfileRequest extends FormRequest
         return [
             'first_name' => 'required|string|min:3',
             'last_name' => 'required|string|min:3',
-            'username' => 'required|string|unique:users,username,' . auth()->user()->id,
+            'username' => 'required|string|max:50|unique:users,username,' . auth()->user()->id,
             'bio' => 'nullable|string',
             'address' => 'nullable|string',
             'phone_number' => 'nullable|string|max:14',
