@@ -15,10 +15,12 @@ class ThrowPostAction
        
         $filterDate = Post::whereDate('created_at', '>', now()->subDays(7))->count();
         $day = 7;
-            if($filterDate < 10) {
+    
+        //jika tanggal 7 hari terakhir konten nya kurang dari 10 maka set ke 30 hari terakhir
+        if($filterDate < 10) {
             $filterDate = Post::whereDate('created_at', '>', now()->subDays(30))->count();
             $day = 30;
-            }
+        }
 
         $posts = Post::with(['thread:slug,text,created_at,post_id' , 
         'user:id,first_name,last_name,username,foto_profile' , 

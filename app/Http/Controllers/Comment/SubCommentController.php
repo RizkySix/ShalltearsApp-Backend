@@ -21,10 +21,7 @@ class SubCommentController extends Controller
         $validatedData = $request->validated();
 
         $actionResponse = SubCommentStoreAction::sub_comment_store_action($validatedData);
-        //return $actionResponse->comment->post->comments;
-       /*  $actionResponse->load(['comment' => function($comment) {
-            $comment->with(['post:id,comments']);
-        }]); */
+    
         if($actionResponse){
             return response()->json([
                 'status' => true,

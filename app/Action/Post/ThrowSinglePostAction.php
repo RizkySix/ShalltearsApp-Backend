@@ -13,7 +13,7 @@ class ThrowSinglePostAction
     {
         $singlePost = $post->load(['album' => function($album) {
             $album->with(['album_photos' => function($albumPhoto) {
-                $albumPhoto->orderBy('index' , 'ASC');
+                $albumPhoto->orderBy('index' , 'ASC'); // urutkan dari index photo ke 0-4
             }])
             ->select('id' , 'slug' , 'caption' , 'post_id' , 'created_at');
         }]);

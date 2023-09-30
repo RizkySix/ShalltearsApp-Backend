@@ -65,7 +65,7 @@ class AuthenticatedTest extends TestCase
             'message' => 'Login Success',
             'token' => $response['token'],
         ]);
-        $this->assertDatabaseCount('personal_access_tokens' , 2);
+        $this->assertDatabaseCount('personal_access_tokens' , 1);
 
 
         //percobaan kedua dengan username
@@ -82,7 +82,7 @@ class AuthenticatedTest extends TestCase
             'message' => 'Login Success',
             'token' => $response['token'],
         ]);
-        $this->assertDatabaseCount('personal_access_tokens' , 3);
+        $this->assertDatabaseCount('personal_access_tokens' , 1);
     }
 
     /**

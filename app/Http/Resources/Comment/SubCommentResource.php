@@ -18,7 +18,7 @@ class SubCommentResource extends JsonResource
         return [
               'sub_comment_id' => $this->id,
               'sub_comment' => $this->sub_comment,
-              'user_id' => $this->user_id,
+             // 'user_id' => $this->user_id,
               'comment_id' => $this->comment_id,
               'created_at' => Carbon::parse($this->created_at)->format('Y M d'),
               'total_comment' => $this->whenNotNull($this->current_comment)

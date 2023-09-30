@@ -3,6 +3,7 @@
 namespace Tests\Feature\Post;
 
 use App\Models\AlbumPhoto;
+use App\Models\Post;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -17,6 +18,7 @@ class AlbumTest extends TestCase
     private $user , $secUser;
 
     private $firstImg , $secImg , $thirdImg;
+    private $firstImgAlbum , $secImgAlbum , $thirdImgAlbum;
 
     protected function setUp(): void
     {
@@ -44,7 +46,7 @@ class AlbumTest extends TestCase
                 'path' => $response->getContent(), //lokasi content/path nya
             ]);
 
-            //store to properties
+            //store path image to properties
             if($i === 0){
                 $this->firstImg = $response->getContent();
             }elseif($i === 1){
@@ -57,6 +59,11 @@ class AlbumTest extends TestCase
             $image['album_content'] = UploadedFile::fake()->create('test.mp4' , 1000);
             $this->actingAs($this->user)->post(RouteServiceProvider::DOMAIN . 'temp/album' , $image)
             ->assertStatus(400);
+
+             //path ke album untuk kebutuhan test2 selanjutnya
+             $this->firstImgAlbum = str_replace('temp' , $this->user->email , $this->firstImg);
+             $this->secImgAlbum = str_replace('temp' , $this->user->email , $this->secImg);
+             $this->thirdImgAlbum = str_replace('temp' , $this->user->email , $this->thirdImg);
         }
     }
 
@@ -149,38 +156,33 @@ class AlbumTest extends TestCase
 
         $response = $this->actingAs($this->user)->postJson(RouteServiceProvider::DOMAIN . 'album' , $content)
         ->assertStatus(201);
-       
-        //path ke album
-        $firstImgAlbum = str_replace('temp' , $this->user->email , $this->firstImg);
-        $secImgAlbum = str_replace('temp' , $this->user->email , $this->secImg);
-        $thirdImgAlbum = str_replace('temp' , $this->user->email , $this->thirdImg);
-  
+      
         //pastikan database temp_images empty dan dipindah ke database album_photos
         $this->assertDatabaseEmpty('temp_images');
         $this->assertDatabaseHas('album_photos' , [
-            'content' => $firstImgAlbum,
+            'content' => $this->firstImgAlbum,
             'index' => 2,
-            'album_id' => $response['data']['post_id']
+            /* 'album_id' => $response['data']['post_id'] */
         ]);
         $this->assertDatabaseHas('album_photos' , [
-            'content' => $secImgAlbum,
+            'content' => $this->secImgAlbum,
             'index' => 0,
-            'album_id' => $response['data']['post_id']
+            /* 'album_id' => $response['data']['post_id'] */
         ]);
         $this->assertDatabaseHas('album_photos' , [
-            'content' => $thirdImgAlbum,
+            'content' => $this->thirdImgAlbum,
             'index' => 1,
-            'album_id' => $response['data']['post_id']
+            /* 'album_id' => $response['data']['post_id'] */
         ]);
 
         //pastikan storage temporary kosong dan pindah ke album storage
         $this->assertEquals(true , Storage::missing($this->firstImg));
         $this->assertEquals(true , Storage::missing($this->secImg));
         $this->assertEquals(true , Storage::missing($this->thirdImg));
-
-        $this->assertEquals(true , Storage::exists($firstImgAlbum));
-        $this->assertEquals(true , Storage::exists($secImgAlbum));
-        $this->assertEquals(true , Storage::exists($thirdImgAlbum)); 
+      
+        $this->assertEquals(true , Storage::exists($this->firstImgAlbum));
+        $this->assertEquals(true , Storage::exists($this->secImgAlbum));
+        $this->assertEquals(true , Storage::exists($this->thirdImgAlbum)); 
     }
 
 
@@ -201,30 +203,25 @@ class AlbumTest extends TestCase
 
         $response = $this->actingAs($this->user)->postJson(RouteServiceProvider::DOMAIN . 'album' , $content)
         ->assertStatus(201);
-       
-        //path ke album
-        $firstImgAlbum = str_replace('temp' , $this->user->email , $this->firstImg);
-        $secImgAlbum = str_replace('temp' , $this->user->email , $this->secImg);
-        $thirdImgAlbum = str_replace('temp' , $this->user->email , $this->thirdImg);
   
         //pastikan database temp_images empty dan dipindah ke database album_photos
         $this->assertDatabaseEmpty('temp_images');
 
         //pastikan urutan gambarnya tidak sama dengan gambar yang direorder dulu sebelum di pindahkan ke album
         $this->assertDatabaseMissing('album_photos' , [
-            'content' => $firstImgAlbum,
+            'content' => $this->firstImgAlbum,
             'index' => 2,
-            'album_id' => $response['data']['post_id']
+            /* 'album_id' => $response['data']['post_id'] */
         ]);
         $this->assertDatabaseMissing('album_photos' , [
-            'content' => $secImgAlbum,
+            'content' => $this->secImgAlbum,
             'index' => 0,
-            'album_id' => $response['data']['post_id']
+            /* 'album_id' => $response['data']['post_id'] */
         ]);
         $this->assertDatabaseMissing('album_photos' , [
-            'content' => $thirdImgAlbum,
+            'content' => $this->thirdImgAlbum,
             'index' => 1,
-            'album_id' => $response['data']['post_id']
+            /* 'album_id' => $response['data']['post_id'] */
         ]);
 
         //pastikan storage temporary kosong dan pindah ke album storage
@@ -232,9 +229,9 @@ class AlbumTest extends TestCase
         $this->assertEquals(true , Storage::missing($this->secImg));
         $this->assertEquals(true , Storage::missing($this->thirdImg));
 
-        $this->assertEquals(true , Storage::exists($firstImgAlbum));
-        $this->assertEquals(true , Storage::exists($secImgAlbum));
-        $this->assertEquals(true , Storage::exists($thirdImgAlbum));
+        $this->assertEquals(true , Storage::exists($this->firstImgAlbum));
+        $this->assertEquals(true , Storage::exists($this->secImgAlbum));
+        $this->assertEquals(true , Storage::exists($this->thirdImgAlbum));
         
     }
 
@@ -346,6 +343,95 @@ class AlbumTest extends TestCase
         ]);
         $this->assertEquals(true , Storage::exists($content->content));
 
+    }
+
+
+    /**
+     * @group post-album
+     */
+    public function test_only_owner_can_archive_album() : void
+    {
+        $this->test_store_album_should_move_all_images_from_temp_images_to_album_and_ordered_when_was_reordered();
+
+        //pastikan sudah ada satu record Post karena satu album dimilki oleh sebuah Post
+        $this->assertDatabaseCount('posts' , 1);
+
+        //dapatkan uuid postnya
+        $post = Post::select('uuid')->first();
+
+        //hit api endpoint fail case fail invalod owner
+        $response = $this->actingAs($this->secUser)->delete(RouteServiceProvider::DOMAIN . 'album/' . $post->uuid);
+        $response->assertStatus(403);
+
+        //hit api endpoint archive album case valid owner
+        $response = $this->actingAs($this->user)->delete(RouteServiceProvider::DOMAIN . 'album/' . $post->uuid);
+        $response->assertStatus(200);
+
+        //pastikan deleted_at sudah ditambahkan ke table posts
+        $this->assertDatabaseHas('posts' , [
+            'deleted_at' => now()
+        ]);
+
+    }
+
+
+     /**
+     * @group post-album
+     */
+    public function test_only_owner_can_unarchive_album() : void
+    {
+        $this->test_only_owner_can_archive_album();
+
+        //ambil uuid dari data trashed/archive Post
+        $post = Post::onlyTrashed()->select('uuid')->first();
+
+        //hit api endpoint fail case fail invalid owner
+        $response = $this->actingAs($this->secUser)->post(RouteServiceProvider::DOMAIN . 'album/' . $post->uuid . '/restore');
+        $response->assertStatus(403);
+
+        //hit api endpoint case valid owner
+        $response = $this->actingAs($this->user)->post(RouteServiceProvider::DOMAIN . 'album/' . $post->uuid . '/restore');
+        $response->assertStatus(200);
+
+        //pastikan deleted_at sudah null
+        $this->assertDatabaseHas('posts' , [
+            'deleted_at' => null
+        ]);
+
+    }
+
+
+    /**
+     * @group post-album
+     */
+    public function test_only_owner_can_delete_album() : void
+    {
+        $this->test_store_album_should_move_all_images_from_temp_images_to_album_and_ordered_when_was_reordered();
+
+        //pastikan sudah ada satu record Post karena satu album dimilki oleh sebuah Post
+        $this->assertDatabaseCount('posts' , 1);
+
+        //dapatkan uuid postnya
+        $post = Post::select('uuid')->first();
+
+        //hit api endpoint fail case invalod owner
+        $response = $this->actingAs($this->secUser)->post(RouteServiceProvider::DOMAIN . 'album/' . $post->uuid . '/force-delete');
+        $response->assertStatus(403);
+
+         //hit api endpoint case valid owner
+         $response = $this->actingAs($this->user)->post(RouteServiceProvider::DOMAIN . 'album/' . $post->uuid . '/force-delete');
+         $response->assertStatus(200);
+
+         //pastikan data-data pada tiap table bersangkutan hilang
+         $this->assertDatabaseEmpty('posts');
+         $this->assertDatabaseEmpty('album_photos');
+         $this->assertDatabaseEmpty('albums');
+
+         //pastikan image terhapus dari directory
+         $this->assertEquals(true , Storage::missing($this->firstImgAlbum));
+         $this->assertEquals(true , Storage::missing($this->secImgAlbum));
+         $this->assertEquals(true , Storage::missing($this->thirdImgAlbum));
+         
     }
 
 

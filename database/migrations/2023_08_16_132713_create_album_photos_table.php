@@ -16,7 +16,7 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(Album::class);
             $table->string('content');
-            $table->tinyInteger('index')->nullable();
+            $table->tinyInteger('index' , false ,true)->nullable();
         });
     }
 

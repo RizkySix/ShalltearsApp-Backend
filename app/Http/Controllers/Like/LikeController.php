@@ -13,7 +13,7 @@ class LikeController extends Controller
     /**
      * Handle an incoming like request.
      */
-    public function like_or_dislike(Post $post) 
+    public function like_or_dislike(Post $post) : JsonResponse
     {
         $actionResponse = LikeAction::like_or_dislike_action($post);
 
