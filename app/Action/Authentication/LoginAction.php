@@ -10,7 +10,7 @@ class LoginAction
      /**
      * Action handling login action.
      */
-    public static function login_action(array $credentials) : string
+    public static function login_action(array $credentials) : string|bool
     {
       
         //definisikan forever chace

@@ -150,7 +150,7 @@ class EmergencyCallTest extends TestCase
 
         $response->assertJson([
             'status' => false,
-            'message' => 23
+            'message' => 'You have access'
         ]);
     }
 
