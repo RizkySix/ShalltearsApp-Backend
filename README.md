@@ -26,6 +26,8 @@ Project ini juga sudah tercover feature test.
 ## Built With
 - Laravel 10
 - Vinka Laravel-hashids
+- MySQL
+- Laravel sanctum
 
 ## License
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
