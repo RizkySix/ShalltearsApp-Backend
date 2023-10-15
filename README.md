@@ -7,9 +7,10 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
-## Tentang Project
+## About Project
 
-Ini adalah project Sosial Media Clone untuk komunitas saya, Project ini dibuat dengan Laravel brezee API sebagai server/backendnya. 
+Ini adalah project Sosial Media untuk komunitas saya, Project ini dibuat dengan Laravel brezee API sebagai server/backendnya.
+Fitur-fitur yang disajikan dari project ini meliputi membuat postingan berupa album foto, membuat thread, memberi komentar, memberi like dan lain sebagainya.
 Untuk mencoba silahkan kunjungi tautan ini https://shalltears.vercel.app/
 Project ini juga sudah tercover feature test.
 
